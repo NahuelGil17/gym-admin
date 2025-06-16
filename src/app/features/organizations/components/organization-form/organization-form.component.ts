@@ -46,6 +46,9 @@ export class OrganizationFormComponent implements OnInit {
         [Validators.required, Validators.pattern(/^[a-z0-9-]+$/)],
       ],
       description: [this.organization?.description || ''],
+      logoUrl: [this.organization?.logoUrl || ''],
+      primaryColor: [this.organization?.primaryColor || '#3B82F6'],
+      secondaryColor: [this.organization?.secondaryColor || '#8B5CF6'],
       maxClients: [
         this.organization?.maxClients || 50,
         [Validators.required, Validators.min(1), Validators.max(10000)]
@@ -64,6 +67,9 @@ export class OrganizationFormComponent implements OnInit {
         name: this.organization.name,
         slug: this.organization.slug,
         description: this.organization.description,
+        logoUrl: this.organization.logoUrl,
+        primaryColor: this.organization.primaryColor,
+        secondaryColor: this.organization.secondaryColor,
         maxClients: this.organization.maxClients,
         isActive: this.organization.isActive,
       });
@@ -79,6 +85,9 @@ export class OrganizationFormComponent implements OnInit {
           name: formValue.name,
           slug: formValue.slug,
           description: formValue.description,
+          logoUrl: formValue.logoUrl,
+          primaryColor: formValue.primaryColor,
+          secondaryColor: formValue.secondaryColor,
           maxClients: formValue.maxClients,
           isActive: formValue.isActive,
         };
@@ -88,6 +97,9 @@ export class OrganizationFormComponent implements OnInit {
           name: formValue.name,
           slug: formValue.slug,
           description: formValue.description,
+          logoUrl: formValue.logoUrl,
+          primaryColor: formValue.primaryColor,
+          secondaryColor: formValue.secondaryColor,
           maxClients: formValue.maxClients,
           adminUser: formValue.adminUser,
         };
@@ -138,6 +150,18 @@ export class OrganizationFormComponent implements OnInit {
 
   get descriptionControl() {
     return this.organizationForm.get('description');
+  }
+
+  get logoUrlControl() {
+    return this.organizationForm.get('logoUrl');
+  }
+
+  get primaryColorControl() {
+    return this.organizationForm.get('primaryColor');
+  }
+
+  get secondaryColorControl() {
+    return this.organizationForm.get('secondaryColor');
   }
 
   get maxClientsControl() {

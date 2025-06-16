@@ -17,8 +17,14 @@
           <!-- Logo Section -->
           <div class="flex items-center justify-center" [ngClass]="{ 'hidden': isMenuOpen, 'block': !isMenuOpen }">
             <a routerLink="/" class="flex items-center">
-              <img title="logo" class="h-8 w-auto brightness-0 invert" src="./assets/logos/logo-white.png"
-                [alt]="'Logo'" />
+              <!-- Show organization logo if available, otherwise show default logo -->
+              @if (organizationLogo$ | async; as orgLogo) {
+                <img title="Organization logo" class="h-8 w-auto max-w-32 object-contain" [src]="orgLogo"
+                  [alt]="'Organization Logo'" />
+              } @else {
+                <img title="logo" class="h-8 w-auto brightness-0 invert" src="./assets/logos/logo-white.png"
+                  [alt]="'+Fit Logo'" />
+              }
             </a>
           </div>
         </div>

@@ -95,6 +95,88 @@
         <p class="text-xs text-gray-500 text-right">{{ (descriptionControl?.value || '').length }}/200 caracteres</p>
       </div>
 
+      <!-- Logo URL -->
+      <div class="space-y-2 mb-6">
+        <label for="logoUrl" class="block text-sm font-bold text-slate-700 mb-3 flex items-center">
+          <i class="ph-image text-blue-600 mr-2"></i>
+          URL del Logo
+        </label>
+        <input id="logoUrl" type="url" formControlName="logoUrl"
+          class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:ring-3 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-200 bg-white/60 backdrop-blur-sm shadow-sm hover:shadow-md"
+          placeholder="https://ejemplo.com/logo.png" />
+        <div class="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+          <p class="text-sm text-blue-700 flex items-center">
+            <i class="ph-info text-blue-500 mr-2"></i>
+            <span>URL del logo de la organización. Se mostrará en el dashboard y aplicación.</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Colores de la organización -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- Color Primario -->
+        <div class="space-y-2">
+          <label for="primaryColor" class="block text-sm font-bold text-slate-700 mb-3 flex items-center">
+            <i class="ph-palette text-blue-600 mr-2"></i>
+            Color Primario
+          </label>
+          <div class="flex items-center space-x-3">
+            <input id="primaryColor" type="color" formControlName="primaryColor"
+              class="h-12 w-16 border border-slate-300 rounded-lg cursor-pointer focus:ring-3 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-200 shadow-sm hover:shadow-md" />
+            <input type="text" [value]="primaryColorControl?.value" readonly
+              class="flex-1 px-4 py-3 border border-slate-300 rounded-xl bg-slate-50 text-slate-600 font-mono text-sm" />
+          </div>
+          <div class="mt-2 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+            <p class="text-sm text-blue-700 flex items-center">
+              <i class="ph-info text-blue-500 mr-2"></i>
+              <span>Color principal usado en botones, enlaces y elementos destacados.</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Color Secundario -->
+        <div class="space-y-2">
+          <label for="secondaryColor" class="block text-sm font-bold text-slate-700 mb-3 flex items-center">
+            <i class="ph-palette text-blue-600 mr-2"></i>
+            Color Secundario
+          </label>
+          <div class="flex items-center space-x-3">
+            <input id="secondaryColor" type="color" formControlName="secondaryColor"
+              class="h-12 w-16 border border-slate-300 rounded-lg cursor-pointer focus:ring-3 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-200 shadow-sm hover:shadow-md" />
+            <input type="text" [value]="secondaryColorControl?.value" readonly
+              class="flex-1 px-4 py-3 border border-slate-300 rounded-xl bg-slate-50 text-slate-600 font-mono text-sm" />
+          </div>
+          <div class="mt-2 p-3 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-200">
+            <p class="text-sm text-purple-700 flex items-center">
+              <i class="ph-info text-purple-500 mr-2"></i>
+              <span>Color secundario usado en acentos y elementos complementarios.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview de colores -->
+      <div class="space-y-2 mb-6">
+        <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center">
+          <i class="ph-eye text-blue-600 mr-2"></i>
+          Vista previa de colores
+        </label>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 rounded-xl border border-slate-200 bg-white/60 backdrop-blur-sm">
+            <p class="text-sm font-medium text-slate-700 mb-3">Botón Primario</p>
+            <button type="button" [style.background-color]="primaryColorControl?.value"
+              class="px-6 py-3 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200">
+              Ejemplo Botón
+            </button>
+          </div>
+          <div class="p-4 rounded-xl border border-slate-200 bg-white/60 backdrop-blur-sm">
+            <p class="text-sm font-medium text-slate-700 mb-3">Acento Secundario</p>
+            <div [style.background-color]="secondaryColorControl?.value" 
+              class="h-8 rounded-lg shadow-sm border border-slate-200"></div>
+          </div>
+        </div>
+      </div>
+
       <!-- Máximo de Clientes -->
       <div class="space-y-2">
         <label for="maxClients" class="block text-sm font-bold text-slate-700 mb-3 flex items-center">
