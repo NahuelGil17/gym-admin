@@ -3,11 +3,13 @@ import { ScreenRoutineState } from '@features/screenRoutine/state/screenRoutine.
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { CardRoutineComponent } from '../card-routine/card-routine.component';
+import { OrganizationThemeService } from '@core/services/organization-theme.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-screen',
   standalone: true,
-  imports: [CardRoutineComponent],
+  imports: [CardRoutineComponent, AsyncPipe],
   templateUrl: './screen.component.html',
   styleUrl: './screen.component.css',
 })
@@ -21,9 +23,17 @@ export class ScreenComponent implements OnInit, OnChanges {
   womenRoutines: any[] = [];
   cardioRoutines: any[] = [];
 
-  logos = ['logo-white.png', 'logo-white.png'];
+  organizationLogo$: Observable<string | null>;
+  organizationLogos$: Observable<string[]>;
+  defaultLogos = ['assets/logos/logo-white.png', 'assets/logos/logo-white.png'];
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private organizationThemeService: OrganizationThemeService
+  ) {
+    this.organizationLogo$ = this.organizationThemeService.getOrganizationLogo();
+    this.organizationLogos$ = this.organizationThemeService.getOrganizationLogos();
+  }
 
   ngOnInit() {
     this.menRoutines = this.routines.filter((r) => r.type === 'men');

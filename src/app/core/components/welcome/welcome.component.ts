@@ -7,7 +7,7 @@ import {
   AfterViewInit,
   OnDestroy,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { GetClients } from '@features/client/state/clients.actions';
 import { ClientsState } from '@features/client/state/clients.state';
 import { GetPlans } from '@features/plans/state/plan.actions';
@@ -24,6 +24,8 @@ import {
   tap,
 } from 'rxjs';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
+import { OrganizationThemeService } from '@core/services/organization-theme.service';
+import { NgClass } from '@angular/common';
 
 Chart.register(...registerables);
 
@@ -39,7 +41,7 @@ interface DashboardStats {
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [RouterLink, AsyncPipe, CommonModule],
+  imports: [RouterLink, AsyncPipe, CommonModule, NgClass],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.css',
 })
@@ -51,13 +53,22 @@ export class WelcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   stats$!: Observable<DashboardStats>;
   isLoading$!: Observable<boolean>;
+  organizationLogo$: Observable<string | null>;
+  organizationColors$: Observable<{primary: string, secondary: string} | null>;
 
   private clientsChartInstance: Chart | null = null;
   private plansChartInstance: Chart | null = null;
   private statsSubscription?: Subscription;
   private chartsCreated = false;
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private router: Router,
+    private organizationThemeService: OrganizationThemeService
+  ) {
+    this.organizationLogo$ = this.organizationThemeService.getOrganizationLogo();
+    this.organizationColors$ = this.organizationThemeService.getOrganizationColors();
+  }
 
   ngOnInit(): void {
     // Cargar datos iniciales
@@ -65,6 +76,8 @@ export class WelcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Configurar observables
     this.setupObservables();
+
+    this.organizationThemeService.applyOrganizationTheme();
   }
 
   ngAfterViewInit(): void {
@@ -317,5 +330,9 @@ export class WelcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.statsSubscription) {
       this.statsSubscription.unsubscribe();
     }
+  }
+
+  navigateTo(route: string) {
+    this.router.navigate([route]);
   }
 }

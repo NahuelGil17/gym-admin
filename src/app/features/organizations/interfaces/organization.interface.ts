@@ -5,6 +5,9 @@ export interface Organization {
   name: string;
   slug: string;
   description?: string;
+  logoUrl?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
   isActive: boolean;
   permissions: Permission[];
   maxClients: number;
@@ -23,6 +26,9 @@ export interface CreateOrganizationDto {
   name: string;
   slug: string;
   description?: string;
+  logoUrl?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
   permissions?: Permission[];
   maxClients: number;
   adminUser: AdminUserDto;
@@ -32,6 +38,9 @@ export interface UpdateOrganizationDto {
   name?: string;
   slug?: string;
   description?: string;
+  logoUrl?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
   isActive?: boolean;
   permissions?: Permission[];
   maxClients?: number;

@@ -16,6 +16,7 @@ import { InputDirective } from '@shared/directives/btn/input.directive';
 import { ConditionalTextPipe } from '@shared/pipes/conditional-text.pipe';
 import { ForgotPassword } from '../../state/auth.actions';
 import { AuthState } from '../../state/auth.state';
+import { OrganizationThemeService } from '@core/services/organization-theme.service';
 
 @Component({
   selector: 'app-forgot-password-form',
@@ -38,7 +39,9 @@ export class ForgotPasswordFormComponent implements OnInit, OnDestroy {
   showMessageConfirmation = false;
   private destroy = new Subject<void>();
 
-  loading$: Observable<boolean> = this.store.select(AuthState.authLoading);
+  loading$: Observable<boolean>;
+  organizationLogo$: Observable<string | null>;
+  organizationColors$: Observable<{primary: string, secondary: string} | null>;
 
   constructor(
     private fb: FormBuilder,
@@ -46,13 +49,19 @@ export class ForgotPasswordFormComponent implements OnInit, OnDestroy {
     private store: Store,
     private actions: Actions,
     private snackbar: SnackBarService,
-  ) {}
+    private organizationThemeService: OrganizationThemeService
+  ) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+    });
+
+    this.loading$ = this.store.select(AuthState.authLoading);
+    this.organizationLogo$ = this.organizationThemeService.getOrganizationLogo();
+    this.organizationColors$ = this.organizationThemeService.getOrganizationColors();
+  }
 
   ngOnInit(): void {
-    // Create the login form with email and password fields
-    this.loginForm = this.fb.group({
-      email: [null, [Validators.required, Validators.email]],
-    });
+    this.organizationThemeService.applyOrganizationTheme();
   }
 
   ngOnDestroy(): void {

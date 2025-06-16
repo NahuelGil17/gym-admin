@@ -13,7 +13,7 @@ import {
 import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { AsyncPipe, NgClass } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { SnackBarService } from '@core/services/snackbar.service';
 import { passwordValidator } from '@core/validators/password.validator';
 import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
@@ -26,6 +26,7 @@ import {
   Login,
 } from '../../state/auth.actions';
 import { AuthState } from '../../state/auth.state';
+import { OrganizationThemeService } from '@core/services/organization-theme.service';
 
 @Component({
   selector: 'app-login-form',
@@ -37,6 +38,7 @@ import { AuthState } from '../../state/auth.state';
     AsyncPipe,
     ConditionalTextPipe,
     InputDirective,
+    RouterLink,
   ],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.css',
@@ -48,7 +50,9 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   showPassword = false;
   private destroy = new Subject<void>();
 
-  loading$: Observable<boolean> = this.store.select(AuthState.authLoading);
+  loading$: Observable<boolean>;
+  organizationLogo$: Observable<string | null>;
+  organizationColors$: Observable<{primary: string, secondary: string} | null>;
 
   constructor(
     private fb: FormBuilder,
@@ -56,14 +60,20 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     private store: Store,
     private actions: Actions,
     private snackbar: SnackBarService,
-  ) {}
+    private organizationThemeService: OrganizationThemeService
+  ) {
+    this.loginForm = this.fb.group({
+      identifier: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, passwordValidator()]],
+    });
+
+    this.loading$ = this.store.select(AuthState.authLoading);
+    this.organizationLogo$ = this.organizationThemeService.getOrganizationLogo();
+    this.organizationColors$ = this.organizationThemeService.getOrganizationColors();
+  }
 
   ngOnInit(): void {
-    // Create the login form with email and password fields
-    this.loginForm = this.fb.group({
-      identifier: [null, [Validators.required, Validators.email]],
-      password: [null, [Validators.required, passwordValidator()]],
-    });
+    this.organizationThemeService.applyOrganizationTheme();
   }
 
   ngOnDestroy(): void {
@@ -77,7 +87,8 @@ export class LoginFormComponent implements OnInit, OnDestroy {
    */
   login(): void {
     if (this.loginForm.valid) {
-      this.store.dispatch(new Login(this.loginForm.value));
+      const { identifier, password } = this.loginForm.value;
+      this.store.dispatch(new Login({ identifier, password }));
       this.actions
         .pipe(ofActionSuccessful(Login), takeUntil(this.destroy))
         .subscribe(() => {
