@@ -7,6 +7,7 @@ import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SnackBarService } from '@core/services/snackbar.service';
+import { OrganizationThemeService } from '@core/services/organization-theme.service';
 
 import { Organization } from '../../interfaces/organization.interface';
 import { OrganizationsState } from '../../state/organizations.state';
@@ -38,6 +39,7 @@ export class OrganizationsPageComponent implements OnInit, OnDestroy {
   organizations$: Observable<Organization[]>;
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
+  organizationColors$: Observable<{primary: string, secondary: string} | null>;
 
   showForm = false;
   selectedOrganization: Organization | null = null;
@@ -61,16 +63,19 @@ export class OrganizationsPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private dialog: MatDialog,
     private snackBarService: SnackBarService,
+    private organizationThemeService: OrganizationThemeService,
   ) {
     this.organizations$ = this.store.select(
       OrganizationsState.getOrganizations,
     );
     this.loading$ = this.store.select(OrganizationsState.getLoading);
     this.error$ = this.store.select(OrganizationsState.getError);
+    this.organizationColors$ = this.organizationThemeService.getOrganizationColors();
   }
 
   ngOnInit(): void {
     this.loadOrganizations();
+    this.organizationThemeService.applyOrganizationTheme();
   }
 
   ngOnDestroy(): void {

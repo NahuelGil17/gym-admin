@@ -6,8 +6,11 @@ import {
   Input,
   QueryList,
   ViewChildren,
+  OnInit,
 } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
+import { OrganizationThemeService } from '@core/services/organization-theme.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-card-routine',
@@ -16,14 +19,36 @@ import { environment } from '../../../../../environments/environment';
   templateUrl: './card-routine.component.html',
   styleUrls: ['./card-routine.component.css'],
 })
-export class CardRoutineComponent implements AfterViewInit {
+export class CardRoutineComponent implements OnInit, AfterViewInit {
   @Input() routine: any;
-  @Input() backgroundColor: string | undefined;
-  @Input() animationDelay: number = 0; // Este delay ya no es necesario si se hace todo al mismo tiempo
+  @Input() animationDelay = 0;
+  @Input() backgroundColor = '';
   @ViewChildren('exerciseText') exerciseTexts!: QueryList<ElementRef>;
   @ViewChildren('exerciseList') exerciseLists!: QueryList<
     ElementRef<HTMLUListElement>
   >;
+
+  organizationColors$: Observable<{primary: string, secondary: string} | null>;
+  defaultColors = {
+    primary: '#1565c0',
+    secondary: '#18a29b'
+  };
+
+  constructor(private organizationThemeService: OrganizationThemeService) {
+    this.organizationColors$ = this.organizationThemeService.getOrganizationColors();
+  }
+
+  ngOnInit() {
+    if (!this.backgroundColor) {
+      this.organizationColors$.subscribe(colors => {
+        if (colors) {
+          this.backgroundColor = colors.primary;
+        } else {
+          this.backgroundColor = this.defaultColors.primary;
+        }
+      });
+    }
+  }
 
   ngAfterViewInit() {
     this.animationScroll();
@@ -102,5 +127,12 @@ export class CardRoutineComponent implements AfterViewInit {
         textElement.nativeElement.classList.add('slide-fade-effect');
       }, 0); // Todos los ejercicios comienzan al mismo tiempo (sin delay)
     });
+  }
+
+  get cardStyle() {
+    return {
+      'animation-delay': `${this.animationDelay}ms`,
+      'background-color': this.backgroundColor
+    };
   }
 }

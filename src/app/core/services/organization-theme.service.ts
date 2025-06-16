@@ -55,6 +55,13 @@ export class OrganizationThemeService {
         this.setCSSCustomProperties(colors.primary, colors.secondary);
       }
     });
+
+    // Apply organization favicon
+    this.getOrganizationLogo().subscribe(logo => {
+      if (logo) {
+        this.setFavicon(logo);
+      }
+    });
   }
 
   private setCSSCustomProperties(primaryColor: string, secondaryColor: string): void {
@@ -94,9 +101,9 @@ export class OrganizationThemeService {
   private hexToRgb(hex: string): {r: number, g: number, b: number} | null {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
+      r: Number.parseInt(result[1], 16),
+      g: Number.parseInt(result[2], 16),
+      b: Number.parseInt(result[3], 16)
     } : null;
   }
 
@@ -141,6 +148,47 @@ export class OrganizationThemeService {
       '--color-secondary-900'
     ];
     
-    defaultColors.forEach(prop => root.style.removeProperty(prop));
+    for (const prop of defaultColors) {
+      root.style.removeProperty(prop);
+    }
+  }
+
+  private setFavicon(iconUrl: string): void {
+    const favicon = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
+    if (favicon) {
+      favicon.href = iconUrl;
+    } else {
+      const newFavicon = document.createElement('link');
+      newFavicon.rel = 'icon';
+      newFavicon.type = 'image/x-icon';
+      newFavicon.href = iconUrl;
+      document.head.appendChild(newFavicon);
+    }
+  }
+
+  getOrganizationLogos(): Observable<string[]> {
+    return this.getCurrentOrganization().pipe(
+      map(org => {
+        if (!org?.logoUrl) {
+          // Return default logos if no organization logo
+          return [
+            'assets/logos/logo-white.png',
+            'assets/logos/logo-white.png'
+          ];
+        }
+        // Return organization logo repeated twice for consistency
+        return [org.logoUrl, org.logoUrl];
+      })
+    );
+  }
+
+  getDefaultLogo(): string {
+    return 'assets/logos/logo-white.png';
+  }
+
+  getOrganizationName(): Observable<string | null> {
+    return this.getCurrentOrganization().pipe(
+      map(org => org?.name || null)
+    );
   }
 }

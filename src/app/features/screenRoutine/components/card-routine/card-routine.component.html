@@ -1,31 +1,38 @@
-<div class="mt-2">
-  <div class="flex justify-around h-[28em] gap-4">
-    @for (subRoutine of routine.subRoutines; track $index) {
-      <div
-        class="flex flex-col w-[45%] rounded-2xl shadow-xl bg-[#121212] h-full overflow-hidden border-2 border-[#f7f7f7] border-opacity-50 card-3d"
-      >
-        <div
-          class="flex items-center justify-center w-full bg-[#1565C0] backgroundTitle rounded-t-lg"
-          [ngStyle]="{ 'background-color': backgroundColor }"
-        > 
-          <p class="text-3xl text-center font-bold font-apexPro text-white !m-0" style="text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">
-            Dia {{ $index + 1 }}
-          </p>
-        </div>
-        <!-- Lista en 2 columnas -->
-        <ul #exerciseList  class="gap-2 px-4 py-2 bg-[#262626] shadow-md flex flex-col h-full overflow-y-auto max-h-[30em] rounded-b-xl hide-scrollbar">
-          @for (exercise of subRoutine.exercises; track $index) {
-            <li
-              #exerciseText
-              class="text-xl font-bold text-white text-left slide-fade-effect opacity-0 flex justify-between items-center"
-              [ngStyle]="{ 'animation-delay': getAnimationDelay($index) }"
-            >
-              <span>-{{ exercise.name | uppercase  }}</span>
-              <span class="ml-4 whitespace-nowrap">{{ exercise.series }} x {{ exercise.reps }}</span>
-            </li>
-          }
+<div class="card-3d slide-fade-effect p-6 text-white rounded-xl shadow-2xl transition-all duration-300 hover:scale-105"
+  [ngStyle]="cardStyle">
+  <div class="backgroundTitle rounded-xl mb-4" [ngStyle]="cardStyle">
+    <h2 class="text-3xl font-black text-center text-white drop-shadow-lg">
+      {{ routine.name }}
+    </h2>
+  </div>
+
+  <div class="bg-white/20 backdrop-blur-sm rounded-xl p-4 space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      @for (exercise of routine.exercisesRoutines; track exercise.id) {
+      <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 border border-white/30">
+        <h3 #exerciseText class="text-lg font-bold text-white mb-2 drop-shadow-sm">
+          {{ exercise.exercise.name }}
+        </h3>
+        <ul #exerciseList class="text-sm text-white/90 space-y-1 hide-scrollbar">
+          <li class="flex justify-between items-center">
+            <span>Series:</span>
+            <span class="font-semibold">{{ exercise.series }}</span>
+          </li>
+          <li class="flex justify-between items-center">
+            <span>Repeticiones:</span>
+            <span class="font-semibold">{{ exercise.repetitions }}</span>
+          </li>
+          <li class="flex justify-between items-center">
+            <span>Peso:</span>
+            <span class="font-semibold">{{ exercise.weight }} kg</span>
+          </li>
+          <li class="flex justify-between items-center">
+            <span>Descanso:</span>
+            <span class="font-semibold">{{ exercise.rest }} seg</span>
+          </li>
         </ul>
       </div>
-    }
+      }
+    </div>
   </div>
 </div>

@@ -162,7 +162,7 @@ import {
                  </app-doughnut-chart>
                </div>
                <div class="mt-4 space-y-2">
-                 @for (plan of metrics.financialMetrics?.revenueByPlan || []; track plan.planName) {
+                 @for (plan of metrics.financialMetrics.revenueByPlan || []; track plan.planName) {
                    <div class="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
                      <span class="text-sm font-medium text-gray-700">{{ plan.planName }}</span>
                      <span class="text-sm text-gray-600">{{ plan.percentage.toFixed(1) }}%</span>
@@ -183,7 +183,7 @@ import {
                 Horarios de Mayor Demanda
               </h3>
               <div class="space-y-3">
-                @for (hour of metrics.occupancyMetrics?.peakHours || []; track hour.hour) {
+                @for (hour of metrics.occupancyMetrics.peakHours || []; track hour.hour) {
                   <div class="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
                     <span class="font-medium text-gray-900">{{ hour.hour }}:00</span>
                     <div class="flex items-center space-x-2">
@@ -207,7 +207,7 @@ import {
                 Ejercicios Más Populares
               </h3>
               <div class="space-y-3">
-                @for (exercise of (metrics.routineMetrics?.mostPopularExercises || []).slice(0, 5); track exercise.name) {
+                @for (exercise of (metrics.routineMetrics.mostPopularExercises || []).slice(0, 5); track exercise.name) {
                   <div class="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
                     <div>
                       <span class="font-medium text-gray-900">{{ exercise.name }}</span>
